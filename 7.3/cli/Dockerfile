@@ -1,9 +1,9 @@
-FROM php:7.1-cli
+FROM php:7.3-cli
 
 LABEL \
-	name="PHP 7.1 CLI" \
+	name="PHP 7.3 CLI" \
 	image="mattiabasone/php" \
-	tag="7.1-cli" \
+	tag="7.3-cli" \
 	vendor="mattiabasone"
 
 # Get repository and install wget and vim
@@ -41,7 +41,8 @@ RUN apt-get update \
         libmemcached-dev \
         freetds-dev \
 	    libssl-dev \
-	    openssl \
+        libzip-dev \
+        openssl \
 	    && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
@@ -60,7 +61,6 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
             iconv \
             mbstring \
             intl \
-            mcrypt \
             gd \
             pgsql \
             mysqli \
@@ -87,10 +87,6 @@ RUN pecl install apcu \
     && pecl install apcu_bc-1.0.3 \
     && docker-php-ext-enable apcu --ini-name 10-docker-php-ext-apcu.ini \
     && docker-php-ext-enable apc --ini-name 20-docker-php-ext-apc.ini
-
-# Install PHPUnit
-RUN curl -sS https://phar.phpunit.de/phpunit.phar -o /usr/local/bin/phpunit \
-    && chmod +x /usr/local/bin/phpunit
 
 # Install PHPUnit
 RUN curl -sS https://phar.phpunit.de/phpunit.phar -o /usr/local/bin/phpunit \
