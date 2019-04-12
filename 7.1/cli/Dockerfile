@@ -2,8 +2,8 @@ FROM php:7.1-cli
 
 LABEL \
 	name="PHP 7.1 CLI" \
-	image="mattiabasone/php:7.1-cli" \
-	tag="php:7.1-cli" \
+	image="mattiabasone/php-7.1-cli" \
+	tag="php-7.1-cli" \
 	vendor="mattiabasone"
 
 # Get repository and install wget and vim
