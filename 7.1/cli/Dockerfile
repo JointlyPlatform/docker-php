@@ -56,6 +56,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     && pecl install memcached \
     && pecl install xdebug \
     && docker-php-ext-install \
+            bcmath \
             dom \
             iconv \
             mbstring \
@@ -102,10 +103,6 @@ RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar -o /usr/loca
 
 RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/local/bin/phpcbf \
     && chmod +x /usr/local/bin/phpcbf
-
-# PHP Mess detector
-RUN curl -sS http://static.phpmd.org/php/latest/phpmd.phar -o /usr/local/bin/phpmd \
-    && chmod +x /usr/local/bin/phpmd
 
 # Clean repository
 RUN apt-get clean
