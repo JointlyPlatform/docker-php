@@ -42,6 +42,7 @@ RUN apt-get update \
         freetds-dev \
 	    libssl-dev \
 	    openssl \
+	    openssh-client \
 	    && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
@@ -103,6 +104,9 @@ RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar -o /usr/loca
 
 RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/local/bin/phpcbf \
     && chmod +x /usr/local/bin/phpcbf
+
+# Envoy
+RUN composer global require "laravel/envoy=~1.0"
 
 # Clean repository
 RUN apt-get clean
