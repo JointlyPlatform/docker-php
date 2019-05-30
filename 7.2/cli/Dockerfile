@@ -93,10 +93,6 @@ RUN pecl install apcu \
 RUN curl -sS https://phar.phpunit.de/phpunit.phar -o /usr/local/bin/phpunit \
     && chmod +x /usr/local/bin/phpunit
 
-# Install PHPUnit
-RUN curl -sS https://phar.phpunit.de/phpunit.phar -o /usr/local/bin/phpunit \
-    && chmod +x /usr/local/bin/phpunit
-
 # Install PHP Code Sniffer
 RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar -o /usr/local/bin/phpcs \
     && chmod +x /usr/local/bin/phpcs
