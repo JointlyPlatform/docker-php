@@ -90,6 +90,13 @@ RUN pecl install apcu \
     && docker-php-ext-enable apcu --ini-name 10-docker-php-ext-apcu.ini \
     && docker-php-ext-enable apc --ini-name 20-docker-php-ext-apc.ini
 
+#install Imagemagick & PHP Imagick ext
+RUN apt-get update && \
+    apt-get install -y libmagickwand-dev --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN pecl install imagick && docker-php-ext-enable imagick
+
 # Install PHPUnit
 RUN curl -sS https://phar.phpunit.de/phpunit.phar -o /usr/local/bin/phpunit \
     && chmod +x /usr/local/bin/phpunit
