@@ -29,6 +29,7 @@ RUN apt-get update \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
+        libmagickwand-dev \
         libpng-dev \
         zlib1g-dev \
         libicu-dev \
@@ -89,11 +90,6 @@ RUN pecl install apcu \
     && docker-php-ext-enable apcu --ini-name 10-docker-php-ext-apcu.ini \
     && docker-php-ext-enable apc --ini-name 20-docker-php-ext-apc.ini
 
-#install Imagemagick & PHP Imagick ext
-RUN apt-get update && \
-    apt-get install -y libmagickwand-dev --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
-
 RUN pecl install imagick && docker-php-ext-enable imagick
 
 # Install PHPUnit
@@ -111,4 +107,4 @@ RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/loc
 RUN composer global require "laravel/envoy=~1.0"
 
 # Clean repository
-RUN apt-get clean
+RUN apt-get clean && composer global clear-cache

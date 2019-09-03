@@ -105,4 +105,4 @@ RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/loc
 RUN composer global require "laravel/envoy=~1.0"
 
 # Clean repository
-RUN apt-get clean
+RUN apt-get clean && composer global clear-cache
