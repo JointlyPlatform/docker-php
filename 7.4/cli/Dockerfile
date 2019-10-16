@@ -43,6 +43,7 @@ RUN apt-get update \
         freetds-dev \
 	    libssl-dev \
         libzip-dev \
+        libonig-dev \
         openssl \
         openssh-client \
 	    && rm -rf /var/lib/apt/lists/*
@@ -53,12 +54,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
         --filename=composer
 
 # Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu \
-    && pecl install redis \
-    && pecl install memcached \
-    && pecl install xdebug \
-    && docker-php-ext-install \
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
+    docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu && \
+    pecl install redis && \
+    pecl install memcached && \
+    docker-php-ext-install \
             bcmath \
             dom \
             iconv \
@@ -77,19 +77,24 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
             ftp \
             tidy \
             tokenizer \
-            xml \
-    && docker-php-ext-enable \
+            xml && \
+    docker-php-ext-enable \
             redis \
             memcached \
-            opcache \
-            xdebug \
-            zip
+            opcache
+
+# Install xdebug
+# RUN pecl config-set preferred_state beta && \
+#    pecl install xdebug && \
+#    docker-php-ext-enable xdebug
 
 # Install APCu and APC backward compatibility
-RUN pecl install apcu \
-    && pecl install apcu_bc-1.0.3 \
-    && docker-php-ext-enable apcu --ini-name 10-docker-php-ext-apcu.ini \
-    && docker-php-ext-enable apc --ini-name 20-docker-php-ext-apc.ini
+# RUN pecl install apcu \
+#    && pecl install apcu_bc-1.0.3 \
+#    && docker-php-ext-enable apcu --ini-name 10-docker-php-ext-apcu.ini \
+#    && docker-php-ext-enable apc --ini-name 20-docker-php-ext-apc.ini
+
+RUN pecl install imagick && docker-php-ext-enable imagick
 
 # Install PHPUnit
 RUN curl -sS https://phar.phpunit.de/phpunit.phar -o /usr/local/bin/phpunit \
