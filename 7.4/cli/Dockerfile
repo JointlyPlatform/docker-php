@@ -1,4 +1,4 @@
-FROM php:7.4-rc-cli
+FROM php:7.4.0RC5-cli
 
 LABEL \
 	name="PHP 7.4 CLI" \
@@ -84,9 +84,8 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
             opcache
 
 # Install xdebug
-# RUN pecl config-set preferred_state beta && \
-#    pecl install xdebug && \
-#    docker-php-ext-enable xdebug
+RUN pecl install xdebug && \
+    docker-php-ext-enable xdebug
 
 # Install APCu and APC backward compatibility
 # RUN pecl install apcu \
