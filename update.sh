@@ -26,5 +26,5 @@ docker build . -t ${IMAGE_NAME}:7.3-cli
 docker push ${IMAGE_NAME}:7.3-cli
 
 cd ${DIR}/7.4/cli/
-docker build . -t ${IMAGE_NAME}:7.4-rc-cli
-docker push ${IMAGE_NAME}:7.4-rc-cli
+docker build . -t ${IMAGE_NAME}:7.4-cli
+docker push ${IMAGE_NAME}:7.4-cli

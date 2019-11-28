@@ -94,6 +94,9 @@ RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar -o /usr/loca
 RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/local/bin/phpcbf \
     && chmod +x /usr/local/bin/phpcbf
 
+# Install prestissimo plugin
+RUN composer global require hirak/prestissimo
+
 # Envoy
 RUN composer global require "laravel/envoy=~1.0"
 
