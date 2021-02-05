@@ -55,11 +55,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
         --filename=composer
 
 # Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
-    docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu && \
-    pecl install redis && \
-    pecl install memcached && \
-    docker-php-ext-install \
+RUN docker-php-ext-configure gd --enable-gd --with-jpeg \
+    && docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu \
+    && pecl install redis \
+    && pecl install memcached \
+    && pecl install xdebug \
+    && docker-php-ext-install \
             bcmath \
             dom \
             iconv \
@@ -78,15 +79,13 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
             ftp \
             tidy \
             tokenizer \
-            xml && \
-    docker-php-ext-enable \
+            xml \
+    && docker-php-ext-enable \
             redis \
             memcached \
-            opcache
-
-# Install xdebug
-RUN pecl install xdebug && \
-    docker-php-ext-enable xdebug
+            opcache \
+            xdebug \
+            zip
 
 RUN pecl install imagick && docker-php-ext-enable imagick
 

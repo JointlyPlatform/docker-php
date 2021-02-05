@@ -55,11 +55,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
         --filename=composer
 
 # Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
-    docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu && \
-    pecl install redis && \
-    pecl install memcached && \
-    docker-php-ext-install \
+RUN docker-php-ext-configure gd --enable-gd --with-jpeg \
+    && docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu \
+    && pecl install redis \
+    && pecl install memcached \
+    && pecl install xdebug \
+    && docker-php-ext-install \
             bcmath \
             dom \
             iconv \
@@ -78,17 +79,19 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
             ftp \
             tidy \
             tokenizer \
-            xml && \
-    docker-php-ext-enable \
+            xml \
+    && docker-php-ext-enable \
             redis \
             memcached \
-            opcache
+            opcache \
+            xdebug \
+            zip
 
-# Install xdebug
-RUN pecl install xdebug && \
-    docker-php-ext-enable xdebug
-
-RUN pecl install imagick && docker-php-ext-enable imagick
+# install imagick
+# use github version for now until release from https://pecl.php.net/get/imagick is ready for PHP 8
+RUN mkdir -p /usr/src/php/ext/imagick; \
+    curl -fsSL https://github.com/Imagick/imagick/archive/06116aa24b76edaf6b1693198f79e6c295eda8a9.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip 1; \
+    docker-php-ext-install imagick
 
 # Install PHPUnit
 RUN curl -sS https://phar.phpunit.de/phpunit.phar -o /usr/local/bin/phpunit \
