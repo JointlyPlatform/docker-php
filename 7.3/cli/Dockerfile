@@ -2,9 +2,9 @@ FROM php:7.3-cli
 
 LABEL \
 	name="PHP 7.3 CLI" \
-	image="mattiabasone/php" \
+	image="jointly/php" \
 	tag="7.3-cli" \
-	vendor="mattiabasone"
+	vendor="jointly"
 
 # Get repository and install wget and vim
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -31,6 +31,7 @@ RUN apt-get update \
         libmcrypt-dev \
         libmagickwand-dev \
         libpng-dev \
+        libjpeg-dev \
         zlib1g-dev \
         libicu-dev \
         libtidy-dev \
@@ -43,6 +44,7 @@ RUN apt-get update \
         freetds-dev \
 	    libssl-dev \
         libzip-dev \
+        libonig-dev \
         openssl \
         openssh-client \
 	    && rm -rf /var/lib/apt/lists/*
@@ -104,11 +106,8 @@ RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar -o /usr/loca
 RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/local/bin/phpcbf \
     && chmod +x /usr/local/bin/phpcbf
 
-# Install prestissimo plugin
-RUN composer global require hirak/prestissimo
-
 # Envoy
-RUN composer global require "laravel/envoy=~1.0"
+RUN composer global require "laravel/envoy"
 
 # Clean repository
 RUN apt-get clean && composer global clear-cache

@@ -1,10 +1,10 @@
-FROM php:7.1-cli
+FROM php:8.0-cli
 
 LABEL \
-	name="PHP 7.1 CLI" \
-	image="mattiabasone/php" \
-	tag="7.1-cli" \
-	vendor="mattiabasone"
+	name="PHP 8.0 CLI" \
+	image="jointly/php" \
+	tag="8.0-cli" \
+	vendor="jointly"
 
 # Get repository and install wget and vim
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -31,6 +31,7 @@ RUN apt-get update \
         libmcrypt-dev \
         libmagickwand-dev \
         libpng-dev \
+        libjpeg-dev \
         zlib1g-dev \
         libicu-dev \
         libtidy-dev \
@@ -42,8 +43,10 @@ RUN apt-get update \
         libmemcached-dev \
         freetds-dev \
 	    libssl-dev \
-	    openssl \
-	    openssh-client \
+        libzip-dev \
+        libonig-dev \
+        openssl \
+        openssh-client \
 	    && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
@@ -52,18 +55,16 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
         --filename=composer
 
 # Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu \
-    && pecl install redis \
-    && pecl install memcached \
-    && pecl install xdebug \
-    && docker-php-ext-install \
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
+    docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu && \
+    pecl install redis && \
+    pecl install memcached && \
+    docker-php-ext-install \
             bcmath \
             dom \
             iconv \
             mbstring \
             intl \
-            mcrypt \
             gd \
             pgsql \
             mysqli \
@@ -77,21 +78,16 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
             ftp \
             tidy \
             tokenizer \
-            xml \
-    && docker-php-ext-enable \
+            xml && \
+    docker-php-ext-enable \
             redis \
             memcached \
-            opcache \
-            xdebug \
-            zip
+            opcache
 
-# Install APCu and APC backward compatibility
-RUN pecl install apcu \
-    && pecl install apcu_bc-1.0.3 \
-    && docker-php-ext-enable apcu --ini-name 10-docker-php-ext-apcu.ini \
-    && docker-php-ext-enable apc --ini-name 20-docker-php-ext-apc.ini
+# Install xdebug
+RUN pecl install xdebug && \
+    docker-php-ext-enable xdebug
 
-#install PHP Imagick ext
 RUN pecl install imagick && docker-php-ext-enable imagick
 
 # Install PHPUnit
@@ -105,11 +101,8 @@ RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar -o /usr/loca
 RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/local/bin/phpcbf \
     && chmod +x /usr/local/bin/phpcbf
 
-# Install prestissimo plugin
-RUN composer global require hirak/prestissimo
-
 # Envoy
-RUN composer global require "laravel/envoy=~1.0"
+RUN composer global require "laravel/envoy"
 
 # Clean repository
 RUN apt-get clean && composer global clear-cache

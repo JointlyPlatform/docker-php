@@ -2,9 +2,9 @@ FROM php:7.4-cli
 
 LABEL \
 	name="PHP 7.4 CLI" \
-	image="mattiabasone/php" \
+	image="jointly/php" \
 	tag="7.4-cli" \
-	vendor="mattiabasone"
+	vendor="jointly"
 
 # Get repository and install wget and vim
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -31,6 +31,7 @@ RUN apt-get update \
         libmcrypt-dev \
         libmagickwand-dev \
         libpng-dev \
+        libjpeg-dev \
         zlib1g-dev \
         libicu-dev \
         libtidy-dev \
@@ -87,12 +88,6 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 RUN pecl install xdebug && \
     docker-php-ext-enable xdebug
 
-# Install APCu and APC backward compatibility
-# RUN pecl install apcu \
-#    && pecl install apcu_bc-1.0.3 \
-#    && docker-php-ext-enable apcu --ini-name 10-docker-php-ext-apcu.ini \
-#    && docker-php-ext-enable apc --ini-name 20-docker-php-ext-apc.ini
-
 RUN pecl install imagick && docker-php-ext-enable imagick
 
 # Install PHPUnit
@@ -106,11 +101,8 @@ RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar -o /usr/loca
 RUN curl -sS https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/local/bin/phpcbf \
     && chmod +x /usr/local/bin/phpcbf
 
-# Install prestissimo plugin
-RUN composer global require hirak/prestissimo
-
 # Envoy
-RUN composer global require "laravel/envoy=~1.0"
+RUN composer global require "laravel/envoy"
 
 # Clean repository
 RUN apt-get clean && composer global clear-cache
